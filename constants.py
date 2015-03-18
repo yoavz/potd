@@ -65,6 +65,7 @@ VEGETABLES = [
     "squash"
 ]
 
+INGREDIENTS = PROTEINS + CHEESES + VEGETABLES
 
 # http://www.colourlovers.com/palette/176295/Pizza
 COLORS = [
