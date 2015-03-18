@@ -223,6 +223,21 @@ def chartjs_pie_graph(counts):
         })
     return ret 
 
+def chartjs_bar_graph(counts):
+    colors = list(constants.COLORS) * len(counts)
+
+    counts_tups = [(c, v) for c, v in counts.iteritems()]
+    counts_tups = sorted(counts_tups, key=lambda x: x[1], reverse=True)
+
+    return {
+        "labels": [l[0] for l in counts_tups],
+        "datasets": [{
+            "data": [v[1] for v in counts_tups],
+            "color": colors.pop(),
+            "label": "idunno"
+        }]
+    }
+
 ########
 # MAIN #
 ########
@@ -243,6 +258,4 @@ if __name__ == '__main__':
     ingredients = {}
     for d in [veggies, proteins, cheeses]:
         ingredients.update(d)
-    gen_json('ingredients_overall', chartjs_pie_graph(ingredients))
-
-    pprint(ingredients)
+    gen_json('ingredients_overall', chartjs_bar_graph(ingredients))
