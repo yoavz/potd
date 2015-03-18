@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     import json
     with open('pizzas.json', 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(data, outfile, encoding="utf-8")
 
     print "Got " + str(len(data)) + " pizza data"
     print "Most recent pizza: " + data[0]["created_time"]

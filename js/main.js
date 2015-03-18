@@ -14,17 +14,17 @@ function genChart(dataFile, domSelector, type) {
     var ctx = $(domSelector).children("canvas").get(0).getContext("2d");
     switch(type) {
       case POTD.ChartJSType.PIE:
-        var cheeseOverall = new Chart(ctx).Pie(json);
+        var chart = new Chart(ctx).Pie(json);
         break;
       case POTD.ChartJSType.BAR: 
-        var cheeseOverall = new Chart(ctx).Bar(json);
+        var chart = new Chart(ctx).Bar(json);
         break;
       default:
         console.log("Invalid chart js type");
     }
 
     // add the legend
-    $(domSelector).children(".legend").html(cheeseOverall.generateLegend());
+    $(domSelector).children(".legend").html(chart.generateLegend());
   });
 
 }
@@ -32,5 +32,6 @@ function genChart(dataFile, domSelector, type) {
 genPieChart = function (f, d) { genChart(f, d, POTD.ChartJSType.PIE); }
 genBarChart = function (f, d) { genChart(f, d, POTD.ChartJSType.BAR); }
 
-genPieChart("charts/cheese_overall.json", "#cheese-overall");
-genBarChart("charts/cheese_by_month.json", "#cheese-by-month");
+genPieChart("charts/base_overall.json", "#base-overall");
+genBarChart("charts/base_by_month.json", "#base-by-month");
+genPieChart("charts/ingredients_overall.json", "#ingredients-overall");

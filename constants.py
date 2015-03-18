@@ -1,4 +1,70 @@
-CHEESES = [ "marinara", "bianca", "margherita", "verde" ]
+# -*- coding: utf-8 -*-
+
+########
+# MENU #
+########
+
+BASES = [ "marinara", "bianca", "margherita", "verde" ]
+
+PROTEINS = [
+    "bacon",
+    "bacon marmalad",
+    "anchovies",
+    "pepperoni",
+    "shrimp",
+    "chicken",
+    "chicken sausage",
+    "soppressata",
+    # official menu name is "prosciutto di parma", but
+    # this word is sufficiently unique
+    "prosciutto", 
+    "rosemary ham",
+    "salami",
+    "sausage",
+    "meatballs",
+    "egg",
+]
+
+CHEESES = [
+    "ricotta",
+    # "scamorza" maybe used. TODO: check insta 
+    "provolone",
+    "gorgonzola",
+    "feta",
+    # menu name: "boschetto di tartufo"
+    "boschetto",
+    "fontina",
+    "goat cheese",
+    # menu name: "mozarella di bufala"
+    "mozarella",
+    # left out: vegan mozzarella
+]
+
+VEGETABLES = [
+    "broccolini",
+    "peppadew",
+    "tomato",
+    "kalamata olive",
+    "artichoke",
+    "arugula",
+    "pine nut",
+    "mushroom",
+    "roasted garlic",
+    "caramelized onion",
+    "red onion",
+    "capers",
+    "pesto",
+    "corn",
+    "jalapeño",
+    "spinach",
+
+    "sundried tomato",
+    "pineapple",
+    "green pepper",
+    "red pepper",
+    "squash"
+]
+
 
 # http://www.colourlovers.com/palette/176295/Pizza
 COLORS = [
@@ -8,3 +74,4 @@ COLORS = [
     "#B44418",
     "#D1A674",
 ]
+
