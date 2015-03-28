@@ -35,3 +35,5 @@ genBarChart = function (f, d) { genChart(f, d, POTD.ChartJSType.BAR); }
 genPieChart("charts/base_overall.json", "#base-overall");
 genBarChart("charts/base_by_month.json", "#base-by-month");
 genBarChart("charts/ingredients_overall.json", "#ingredients-overall");
+genBarChart("charts/ingredient_pairings.json", "#ingredient-pairings");
+

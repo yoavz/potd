@@ -66,6 +66,8 @@ class Pizza(object):
             self.ingredients["chicken"] = False
         if self.ingredients.get("sundried tomato"):
             self.ingredients["tomato"] = False
+        if self.ingredients.get("soppressata"):
+            self.ingredients["salami"] = False
 
     def ingredient_list(self):
         return [i for i, v in self.ingredients.iteritems() if v == True]

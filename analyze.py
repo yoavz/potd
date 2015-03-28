@@ -1,5 +1,6 @@
 import json
 import datetime
+import itertools
 from pprint import pprint
 
 from nltk.tokenize import word_tokenize
@@ -77,22 +78,44 @@ def seperate_by_month(pizzas):
     ''' %B - Month as locale's full name, "January" '''
     return seperate_by_strftime(pizzas, "%B")
 
-def ingredient_counts_by_day(pizzas):
+def ingredient_counts_by_format(pizzas, _format, threshold=3):
     '''
-    Input: a list of pizza objects
-    Output: a dictionary of days to counts of all ingredients 
-            { 0: {
-                    peppadews: 8
-                    ...
-                 }
-              ...
-            }
+    Input: list of pizza objects and a strftime format
+    Output: ingredient counts of pizza grouped by the strftime format
     '''
+    pizzas_by_day = seperate_by_strftime(pizzas, _format)
 
-    pizzas_by_day = seperate_by_day(pizzas)
     ingred_counts = { d: ingredient_counts(v) for d, v in pizzas_by_day.iteritems() }
+    ingred_counts = { d: sorted(v.items(), key=lambda x: x[1], reverse=True) for d, v in ingred_counts.iteritems() }
+    ingred_counts = { d: v[:threshold] for d, v in ingred_counts.iteritems() }
 
     return ingred_counts
+
+def ingredient_counts_by_day(pizzas, threshold=3):
+    return ingredient_counts_by_format(pizzas, "%A", threshold)
+
+def ingredient_counts_by_month(pizzas, threshold=3):
+    return ingredient_counts_by_format(pizzas, "%B", threshold)
+
+def combos_to_pizzas(pizzas, N=2):
+
+    combos = dict()
+
+    for p in pizzas:
+        ingredients = p.ingredient_list()
+        if len(ingredients) < N:
+            # print "less than " + str(N) + " ingredients: " + p.description
+            continue
+        for combo in itertools.combinations(ingredients, N):
+            if combo in combos:
+                combos[combo].append(p)
+            else:
+                combos[combo] = [p]
+
+    return combos
+
+def combos(pizzas, N=2):
+    return { c: len(v) for c, v in combos_to_pizzas(pizzas, N).iteritems() }
 
 def chartjs_pie_graph(counts):
     colors = list(constants.COLORS) * len(counts)
@@ -147,8 +170,22 @@ if __name__ == '__main__':
     print str(len(pizzas)) + " pizzas parsed. "
     print str(sum([p for p in problems.values()])) + " pizzas tossed. "
 
-    by_day = ingredient_counts_by_day(pizzas)
-    pprint(by_day)
+    # overall charts
+    gen_json('base_overall', chartjs_pie_graph(base_counts(pizzas)))
+    gen_json('ingredients_overall', chartjs_bar_graph(ingredient_counts(pizzas)))
 
-    # gen_json('base_overall', chartjs_pie_graph(base_counts(pizzas)))
-    # gen_json('ingredients_overall', chartjs_bar_graph(ingredient_counts(pizzas)))
+    # seperate ingreds by day
+    by_day = ingredient_counts_by_day(pizzas, threshold=3)
+    by_month = ingredient_counts_by_month(pizzas, threshold=3)
+    pprint(by_day)
+    pprint(by_month)
+
+    # combos
+    two_combs = combos(pizzas, N=2)
+    two_combs_tups = sorted(two_combs.items(), key=lambda x: x[1], reverse=True)
+    two_combs = dict(two_combs_tups[:20])
+    gen_json('ingredient_pairings', chartjs_bar_graph(two_combs))
+
+    # three_combs = combos_to_pizzas(pizzas, N=3)
+    # three_combs = { i: [p.raw_timestamp for p in ps] for i, ps in three_combs.iteritems() }
+    # pprint(three_combs)
