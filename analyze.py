@@ -97,7 +97,15 @@ def ingredient_counts_by_day(pizzas, threshold=3):
 def ingredient_counts_by_month(pizzas, threshold=3):
     return ingredient_counts_by_format(pizzas, "%B", threshold)
 
-def combos_to_pizzas(pizzas, N=2):
+def combos_pizzas(pizzas, N=2):
+    '''
+    Input: list of pizza object and an integer N
+    Output: dictionary mapping ingredient combinations (length N) to their respective pizza objects
+        {
+            ["brocollini", "chicken"]: [<Pizza>, <Pizza>]
+            ...
+        }
+    '''
 
     combos = dict()
 
@@ -115,7 +123,33 @@ def combos_to_pizzas(pizzas, N=2):
     return combos
 
 def combos(pizzas, N=2):
-    return { c: len(v) for c, v in combos_to_pizzas(pizzas, N).iteritems() }
+    return { c: len(v) for c, v in combos_pizzas(pizzas, N).iteritems() }
+
+def base_pairings_pizzas(pizzas, N=1):
+    '''
+    Input: list of pizza object and an integer N
+    Output: 
+    '''
+    
+    pairings = dict()
+
+    for p in pizzas:
+        ingredients = p.ingredient_list()
+        if len(ingredients) < N:
+            # print "less than " + str(N) + " ingredients: " + p.description
+            continue
+        for combo in itertools.combinations(ingredients, N):
+            pairing = [p.base] + list(combo)
+            pairing = tuple(pairing)
+            if pairing in pairings:
+                pairings[pairing].append(p)
+            else:
+                pairings[pairing] = [p]
+
+    return pairings
+
+def base_pairings(pizzas, N=1):
+    return { c: len(v) for c, v in base_pairings_pizzas(pizzas, N).iteritems() }
 
 def chartjs_pie_graph(counts):
     colors = list(constants.COLORS) * len(counts)
@@ -177,15 +211,17 @@ if __name__ == '__main__':
     # seperate ingreds by day
     by_day = ingredient_counts_by_day(pizzas, threshold=3)
     by_month = ingredient_counts_by_month(pizzas, threshold=3)
-    pprint(by_day)
-    pprint(by_month)
+    # pprint(by_day)
+    # pprint(by_month)
 
-    # combos
+    # ingredient pairings 
     two_combs = combos(pizzas, N=2)
     two_combs_tups = sorted(two_combs.items(), key=lambda x: x[1], reverse=True)
     two_combs = dict(two_combs_tups[:20])
     gen_json('ingredient_pairings', chartjs_bar_graph(two_combs))
 
-    # three_combs = combos_to_pizzas(pizzas, N=3)
-    # three_combs = { i: [p.raw_timestamp for p in ps] for i, ps in three_combs.iteritems() }
-    # pprint(three_combs)
+    # base ingredient pairings
+    pairings = base_pairings(pizzas)
+    pairings_tups = sorted(pairings.items(), key=lambda x: x[1], reverse=True)
+    pairings = dict(pairings_tups[:20])
+    gen_json('base_ingredient_pairings', chartjs_bar_graph(pairings))
