@@ -17,33 +17,6 @@ def gen_json(filename, data):
     with open('charts/' + filename, 'w') as f:
         json.dump(data, f)
 
-# Input: Raw data [ { pizza }, { pizza }, ... ]
-# Output: Data seperated by month:
-#   {
-#       "January": [ { pizza }, { pizza }, ... ] 
-#       "February": [ { pizza }, { pizza }, ... ] ,
-#       ...
-#   } 
-def seperate_months(data):
-
-    def to_month(timestamp):
-        if not timestamp:
-            print "Warning, no timestamp"
-            return "unknown"
-        return datetime.datetime.fromtimestamp(int(timestamp)).strftime("%B")
-
-    months = dict()
-    for d in data:
-        month = to_month(d.get("created_time"))
-        if months.get(month):
-            months[month].append(d)
-        else:
-            months[month] = [d]
-
-    counts = { k: len(months.get(k)) for k in months }
-
-    return months
-
 def base_counts(pizzas):
     '''
     Input: a list of pizza objects
@@ -73,31 +46,53 @@ def ingredient_counts(pizzas):
                 ingreds[ingred] = 1 
     return ingreds
 
+def seperate_by_strftime(pizzas, _format):
+    '''
+    Input: a list of pizza objects
+    Output: a dictionary of _format to lists of pizza objects
+            use python docs to determine strftime behavior.
+    Example with a _format of "%A":
+            { "Monday": [ <Pizza>,
+                        ...
+                        ]
+              ...
+            }
+    '''
+    seperated = dict()
+    
+    for p in pizzas:
+        key = p.timestamp.strftime(_format)
+        if key in seperated:
+            seperated[key].append(p)
+        else:
+            seperated[key] = [p] 
 
-# def base_by_month(data):
-#     
-#     colors = list(constants.COLORS)
-#     by_month = seperate_months(data)
-#     by_month_counts = {m: count_tokens(v) for m, v in by_month.iteritems()}
-#
-#     months = by_month.keys() 
-#     datasets = []
-#
-#     for base in constants.BASES:  
-#         color = colors.pop()
-#         datasets.append({
-#             "label": base,
-#             "fillColor": color,
-#             "data": [ by_month_counts[m].get(base) or 0 for m in months ] 
-#         })
-#
-#     return {
-#         "labels": months,
-#         "datasets": datasets
-#     }
+    return seperated
 
-# Given arbitrary label: count dict, 
-# generate chartjs data for it
+def seperate_by_day(pizzas):
+    ''' %A - Weekday as locale's full name, "Tuesday" '''
+    return seperate_by_strftime(pizzas, "%A")
+
+def seperate_by_month(pizzas):
+    ''' %B - Month as locale's full name, "January" '''
+    return seperate_by_strftime(pizzas, "%B")
+
+def ingredient_counts_by_day(pizzas):
+    '''
+    Input: a list of pizza objects
+    Output: a dictionary of days to counts of all ingredients 
+            { 0: {
+                    peppadews: 8
+                    ...
+                 }
+              ...
+            }
+    '''
+
+    pizzas_by_day = seperate_by_day(pizzas)
+    ingred_counts = { d: ingredient_counts(v) for d, v in pizzas_by_day.iteritems() }
+
+    return ingred_counts
 
 def chartjs_pie_graph(counts):
     colors = list(constants.COLORS) * len(counts)
@@ -152,5 +147,8 @@ if __name__ == '__main__':
     print str(len(pizzas)) + " pizzas parsed. "
     print str(sum([p for p in problems.values()])) + " pizzas tossed. "
 
-    gen_json('base_overall', chartjs_pie_graph(base_counts(pizzas)))
-    gen_json('ingredients_overall', chartjs_bar_graph(ingredient_counts(pizzas)))
+    by_day = ingredient_counts_by_day(pizzas)
+    pprint(by_day)
+
+    # gen_json('base_overall', chartjs_pie_graph(base_counts(pizzas)))
+    # gen_json('ingredients_overall', chartjs_bar_graph(ingredient_counts(pizzas)))
