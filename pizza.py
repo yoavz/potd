@@ -99,3 +99,24 @@ class Pizza(object):
 
         self._parse_base()
         self._parse_ingredients()
+
+    def to_feature_vector(self):
+        '''
+        Exports the pizza object into a normalized feature vector
+        '''
+
+        features = [
+            # day of week as number (0-6)
+            float(self.timestamp.strftime("%w")),
+
+            # month as number (1-12) 
+            float(self.timestamp.strftime("%m"))
+        ]
+
+        return features 
+
+    def ingred_feature_vector(self):
+        
+        return [
+            (1.0 if i in self.ingredient_list() else 0.0) for i in constants.INGREDIENTS
+        ]

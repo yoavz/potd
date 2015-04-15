@@ -97,6 +97,25 @@ def ingredient_counts_by_day(pizzas, threshold=3):
 def ingredient_counts_by_month(pizzas, threshold=3):
     return ingredient_counts_by_format(pizzas, "%B", threshold)
 
+def base_counts_by_format(pizzas, _format):
+    '''
+    Input: list of pizza objects and a strftime format
+    Output: base counts of pizza grouped by the strftime format
+    '''
+
+    seperated_pizzas = seperate_by_strftime(pizzas, _format)
+
+    counts = { d: base_counts(v) for d, v in seperated_pizzas.iteritems() }
+    counts = { d: sorted(v.items(), key=lambda x: x[1], reverse=True) for d, v in counts.iteritems() }
+
+    return counts 
+
+def base_counts_by_day(pizzas):
+    return base_counts_by_format(pizzas, "%A")
+
+def base_counts_by_month(pizzas):
+    return base_counts_by_format(pizzas, "%B")
+
 def combos_pizzas(pizzas, N=2):
     '''
     Input: list of pizza object and an integer N
@@ -174,10 +193,32 @@ def chartjs_bar_graph(counts):
         "labels": [l[0] for l in counts_tups],
         "datasets": [{
             "data": [v[1] for v in counts_tups],
-            "color": colors.pop(),
+            "fillColor": colors.pop(),
             "label": "idunno"
         }]
     }
+
+def chartjs_multibar_graph(multi_counts):
+
+    colors = list(constants.COLORS) * len(multi_counts)
+
+    keys = [k[0] for k in multi_counts.values()[0]]
+    labels = multi_counts.keys()
+
+    def value_of(key, label):
+        for tup in multi_counts[label]:
+            if tup[0] == key:
+                return tup[1]
+
+    return {
+        "labels": labels, 
+        "datasets": [{
+            "data": [value_of(key, label) for label in labels],
+            "fillColor": colors.pop(),
+            "label": key 
+        } for key in keys]
+    }
+
 
 ########
 # MAIN #
@@ -204,15 +245,19 @@ if __name__ == '__main__':
     print str(len(pizzas)) + " pizzas parsed. "
     print str(sum([p for p in problems.values()])) + " pizzas tossed. "
 
+
+
     # overall charts
     gen_json('base_overall', chartjs_pie_graph(base_counts(pizzas)))
     gen_json('ingredients_overall', chartjs_bar_graph(ingredient_counts(pizzas)))
 
     # seperate ingreds by day
-    by_day = ingredient_counts_by_day(pizzas, threshold=3)
-    by_month = ingredient_counts_by_month(pizzas, threshold=3)
-    # pprint(by_day)
-    # pprint(by_month)
+    i_by_day = ingredient_counts_by_day(pizzas, threshold=3)
+    i_by_month = ingredient_counts_by_month(pizzas, threshold=3)
+
+    b_by_day = base_counts_by_day(pizzas)
+    b_by_month = base_counts_by_month(pizzas)
+    gen_json('base_by_month', chartjs_multibar_graph(b_by_month))
 
     # ingredient pairings 
     two_combs = combos(pizzas, N=2)
