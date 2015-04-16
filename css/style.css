@@ -5,3 +5,50 @@ body {
   max-width: 600px;
   margin: 0 auto;
 }
+
+/* graph titles */
+h3 {
+  text-align: center;
+}
+
+/* LEGEND styling */
+
+.legend {
+  overflow: auto;
+}
+
+.legend .legend-title {
+  text-align: left;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 90%;
+}
+
+.legend .legend-scale ul {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  padding: 0;
+  float: left;
+  list-style: none;
+}
+
+.legend .legend-scale ul li {
+  display: block;
+  float: left;
+  width: 100px;
+  text-align: center;
+  font-size: 80%;
+  list-style: none;
+}
+
+.legend ul.pie-legend li span {
+  display: inline-block;
+  height: 15px;
+  width: 75px;
+}
+
+.legend ul.bar-legend li span {
+  display: inline-block;
+  height: 15px;
+  width: 75px;
+}

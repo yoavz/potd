@@ -11,7 +11,7 @@ Chart.defaults.global.responsive = true;
 function genChart(dataFile, domSelector, type) {
   $.getJSON(dataFile, function (json) {
     // create the graph 
-    var ctx = $(domSelector).children("canvas").get(0).getContext("2d");
+    var ctx = $(domSelector).find("canvas").get(0).getContext("2d");
     switch(type) {
       case POTD.ChartJSType.PIE:
         var chart = new Chart(ctx).Pie(json);
@@ -24,7 +24,7 @@ function genChart(dataFile, domSelector, type) {
     }
 
     // add the legend
-    $(domSelector).children(".legend").html(chart.generateLegend());
+    $(domSelector).find(".legend-scale").html(chart.generateLegend());
   });
 
 }
@@ -34,6 +34,8 @@ genBarChart = function (f, d) { genChart(f, d, POTD.ChartJSType.BAR); }
 
 genPieChart("charts/base_overall.json", "#base-overall");
 genBarChart("charts/base_by_month.json", "#base-by-month");
+genBarChart("charts/base_by_weekday.json", "#base-by-weekday");
+
 genBarChart("charts/ingredients_overall.json", "#ingredients-overall");
 genBarChart("charts/ingredient_pairings.json", "#ingredient-pairings");
 genBarChart("charts/base_ingredient_pairings.json", "#base-ingredient-pairings");

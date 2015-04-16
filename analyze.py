@@ -198,12 +198,16 @@ def chartjs_bar_graph(counts):
         }]
     }
 
-def chartjs_multibar_graph(multi_counts):
+def chartjs_multibar_graph(multi_counts, sorted_labels=None):
 
     colors = list(constants.COLORS) * len(multi_counts)
 
     keys = [k[0] for k in multi_counts.values()[0]]
-    labels = multi_counts.keys()
+
+    if sorted_labels:
+        labels = sorted_labels
+    else:
+        labels = multi_counts.keys()
 
     def value_of(key, label):
         for tup in multi_counts[label]:
@@ -245,19 +249,27 @@ if __name__ == '__main__':
     print str(len(pizzas)) + " pizzas parsed. "
     print str(sum([p for p in problems.values()])) + " pizzas tossed. "
 
-
-
     # overall charts
     gen_json('base_overall', chartjs_pie_graph(base_counts(pizzas)))
     gen_json('ingredients_overall', chartjs_bar_graph(ingredient_counts(pizzas)))
 
-    # seperate ingreds by day
-    i_by_day = ingredient_counts_by_day(pizzas, threshold=3)
-    i_by_month = ingredient_counts_by_month(pizzas, threshold=3)
+    # bases by day/month
+    b_by_month = base_counts_by_month(pizzas)
+    months = [m for m in constants.MONTHS if m in b_by_month.keys()]
+    gen_json('base_by_month', chartjs_multibar_graph(b_by_month, sorted_labels=months))
 
     b_by_day = base_counts_by_day(pizzas)
-    b_by_month = base_counts_by_month(pizzas)
-    gen_json('base_by_month', chartjs_multibar_graph(b_by_month))
+    days = [d for d in constants.WEEKDAYS if d in b_by_day.keys()]
+    gen_json('base_by_weekday', chartjs_multibar_graph(b_by_day, sorted_labels=days))
+
+    # ingredients by day/month 
+    i_by_month = ingredient_counts_by_month(pizzas, threshold=3)
+    # months = [m for m in constants.MONTHS if m in i_by_month.keys()]
+    # gen_json('ingredients_by_month', chartjs_multibar_graph(i_by_month, sorted_labels=months))
+
+    i_by_day = ingredient_counts_by_day(pizzas, threshold=3)
+    # days = [d for d in constants.WEEKDAYS if d in i_by_day.keys()]
+    # gen_json('ingredients_by_weekday', chartjs_multibar_graph(i_by_day, sorted_labels=days))
 
     # ingredient pairings 
     two_combs = combos(pizzas, N=2)

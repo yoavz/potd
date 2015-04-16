@@ -23,76 +23,96 @@
       <div class="section">
         <h2>Introduction</h2>
         <p>Everybody loves pizza, myself included. And recently, a few friends and I have been eating more pizza than we ever have in our lives. Let me explain: 800 Degrees Pizza is Westwood's beloved local "build-your-own" pizza spot. It is regarded by UCLA students as "our best pizza", which in a school with <a href="http://dailybruin.com/2015/01/28/pieology-to-take-a-slice-of-westwoods-competitive-pizza-market/">extremely stiff pizza competition</a>, is not an opinion to be taken lightly. Of course, the superior quality of ingredients will cost you more than your average Domino's pizza, anywhere from $10-15 for a meal.</p>
-        <p>Now here's where it gets interesting: Since July 2014, 800 Degrees has been offering a deal they call the <i>Instagram Special</i>. Every day, their instagram account posts a picture of a pizza which will be <strong>50% off</strong> for the day, which ends up being somewhere in the range of $4-5. It didn't take me long to become a habitual checker of instagram every day between the hours of 10 AM to 12 PM, when the <i>POTD</i> was posted by the 800 Degrees.</p>
+        <p>Now here's where it gets interesting: Since July 2014, 800 Degrees has been offering a deal they call the <i>Instagram Special</i>. Every day, their instagram account posts a picture of a pizza which will be <strong>50% off</strong> for the day, which usually ends up being somewhere in the range of $4-5. It didn't take me long to become a habitual checker of instagram every day between the hours of 10 AM to 12 PM, when the <i>POTD</i> was usually posted by the 800 Degrees instagram account. Some days you'd get your average brocollini and mushrooms on margherita. Other days, you'd hit the jackpot with bacon, rosemary ham,  or my personal favorite, the legendary <a href="http://en.wikipedia.org/wiki/Peppadew">peppadew pepper</a> on Bianca.</p>
+        <p>I quickly became interested in how the POTD was picked every day. Who decided on the daily ingredients and what was their criteria for choosing them? Was a pattern behind the ingredients? Most importantly, was there some way to predict the pizza of the day before it was posted? This is the ultimate goal of this project.</p>
       </div>
       
-      <h2>Getting the Data</h2>
-
-      <div id="base-overall">
-        <h2>Base</h2>
-        <canvas class="graph"></canvas>
-        <div class="legend"></div>
+      <div class="section">
+        <h2>Getting the Data</h2>
+        <p>Since the entire history of POTD is documented on social networks, getting the data consists of a few calls to the instagram API. From there, one can tokenize the description of each post and search for matches to the ingredients publicized on the <a href="http://www.800degreespizza.com/menu/">800 Degrees Menu</a>. A few special considerations have to be taken into account, such as ingredients that have identical words ("red onion" and "carmelized onion") and pluralization. This technique isn't perfect, but after some tweaking I was able to come up with a reasonably accurate history model of POTD.</p>
       </div>
 
-      <div id="base-by-month">
-        <h2>Base By Month</h2>
-        <canvas class="graph"></canvas>
-        <div class="legend"></div>
+      <div class="section">
+        <h2>Base Frequency</h2>
+        <p>Now that I had a full history of the pizza of the day, I could start generating some graphs to visualize the data. Using the <a href="http://www.chartjs.org/">ChartJS</a> library, it's easier than ever to generate nice looking graphs! First, let's examine the "base"- the cheese and sauce type that forms the core of the pizza. Only one can be chosen per pizza.</p>
+        <div id="base-overall">
+          <canvas class="graph"></canvas>
+          <div class="legend">
+            <div class="legend-scale"></div>
+          </div>
+          <p>OK, so we already see a trend that suggests a nonrandom distribution: Marinara seems to be far less chosen for the <i>POTD</i> then the other bases. Still, this is not too surprising. Marinara is the least favorite base amongst most 800 Degrees fans I know due to it's alarming lack of cheese.</p>
+        </div>
+
+        <div id="base-by-month">
+          <h3>Base Frequency (by month)</h3>
+          <canvas class="graph"></canvas>
+          <div class="legend">
+            <div class="legend-scale"></div>
+          </div>
+          <p>Again, mostly inconclusive.</p>
+        </div>
+
+        <div id="base-by-weekday">
+          <h3>Base Frequency (by weekday)</h3>
+          <canvas class="graph"></canvas>
+          <div class="legend">
+            <div class="legend-scale"></div>
+          </div>
+          <p>Bianca Tuesday's!</p>
+        </div>
       </div>
 
-      <div id="ingredients-overall">
+      <div class="section">
         <h2>Ingredients</h2>
-        <canvas class="graph"></canvas>
-        <div class="legend"></div>
-      </div>
+        <div id="ingredients-overall">
+          <canvas class="graph"></canvas>
+        </div>
 
-      <div id="ingredients-by-day">
-        <h2>Ingredients By Day</h2>
-        <p>
-          {'Friday': [('broccolini', 6), ('mushroom', 5), ('roasted garlic', 5)],
-           'Monday': [('broccolini', 7), ('rosemary ham', 6), ('chicken', 5)],
-           'Saturday': [('pesto', 6), ('ricotta', 5), ('bacon', 4)],
-           'Sunday': [('artichoke', 5), ('sundried tomato', 5), ('chicken', 4)],
-           'Thursday': [('soppressata', 9), ('salami', 6), ('caramelized onion', 6)],
-           'Tuesday': [('sundried tomato', 6),
-                       ('mushroom', 5),
-                       ('caramelized onion', 5)],
-           'Wednesday': [('chicken', 7), ('tomato', 7), ('mushroom', 5)]}
-        </p>
-        <p>
-          Nothing too interesting here, except for the frequency of soppressata on Thursdays! Over 30% of soppressata pizza's have fallen on thursday so far
-        </p>
-      </div>
+        <div id="ingredients-by-day">
+          <h3>Ingredients By Day</h3>
+          <p>
+            {'Friday': [('broccolini', 6), ('mushroom', 5), ('roasted garlic', 5)],
+             'Monday': [('broccolini', 7), ('rosemary ham', 6), ('chicken', 5)],
+             'Saturday': [('pesto', 6), ('ricotta', 5), ('bacon', 4)],
+             'Sunday': [('artichoke', 5), ('sundried tomato', 5), ('chicken', 4)],
+             'Thursday': [('soppressata', 9), ('salami', 6), ('caramelized onion', 6)],
+             'Tuesday': [('sundried tomato', 6),
+                         ('mushroom', 5),
+                         ('caramelized onion', 5)],
+             'Wednesday': [('chicken', 7), ('tomato', 7), ('mushroom', 5)]}
+          </p>
+          <p>
+            Nothing too interesting here, except for the frequency of soppressata on Thursdays! Over 30% of soppressata pizza's have fallen on thursday so far
+          </p>
+        </div>
 
-      <div id="ingredients-by-month">
-        <h2>Ingredients by Month</h2>
-        <p>
-          {'August': [('chicken', 4), ('spinach', 4), ('egg', 4)],
-           'December': [('arugula', 4), ('sundried tomato', 4), ('spinach', 4)],
-           'February': [('chicken', 5), ('bacon', 4), ('roasted garlic', 4)],
-           'January': [('ricotta', 6), ('caramelized onion', 4), ('bacon', 3)],
-           'July': [('spinach', 2), ('salami', 2), ('soppressata', 2)],
-           'March': [('broccolini', 5), ('chicken', 4), ('sundried tomato', 4)],
-           'November': [('mushroom', 4), ('broccolini', 4), ('caramelized onion', 4)],
-           'October': [('chicken', 5), ('peppadew', 5), ('broccolini', 4)],
-           'September': [('chicken', 5), ('salami', 5), ('tomato', 5)]}
-        </p>
-        <p>
-          Nothing too interesting here
-        </p>
-      </div>
+        <div id="ingredients-by-month">
+          <h3>Ingredients by Month</h3>
+          <p>
+            {'August': [('chicken', 4), ('spinach', 4), ('egg', 4)],
+             'December': [('arugula', 4), ('sundried tomato', 4), ('spinach', 4)],
+             'February': [('chicken', 5), ('bacon', 4), ('roasted garlic', 4)],
+             'January': [('ricotta', 6), ('caramelized onion', 4), ('bacon', 3)],
+             'July': [('spinach', 2), ('salami', 2), ('soppressata', 2)],
+             'March': [('broccolini', 5), ('chicken', 4), ('sundried tomato', 4)],
+             'November': [('mushroom', 4), ('broccolini', 4), ('caramelized onion', 4)],
+             'October': [('chicken', 5), ('peppadew', 5), ('broccolini', 4)],
+             'September': [('chicken', 5), ('salami', 5), ('tomato', 5)]}
+          </p>
+          <p>
+            Nothing too interesting here
+          </p>
+        </div>
 
-      <div id="ingredient-pairings">
-        <h2>Ingredient Pairings</h2>
-        <canvas class="graph"></canvas>
-        <div class="legend"></div>
-      </div>
+        <div id="ingredient-pairings">
+          <h3>Ingredient-Base Pairings</h3>
+          <canvas class="graph"></canvas>
+        </div>
 
-      <div id="base-ingredient-pairings">
-        <h2>Ingredient Pairings</h2>
-        <canvas class="graph"></canvas>
-        <div class="legend"></div>
-      </div>
+        <div id="base-ingredient-pairings">
+          <h3>Ingredient-Ingredient Pairings</h3>
+          <canvas class="graph"></canvas>
+        </div>
 
 
     </div>
