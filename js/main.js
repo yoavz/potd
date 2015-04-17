@@ -36,6 +36,6 @@ genPieChart("charts/base_overall.json", "#base-overall");
 genBarChart("charts/base_by_month.json", "#base-by-month");
 genBarChart("charts/base_by_weekday.json", "#base-by-weekday");
 
-genBarChart("charts/ingredients_overall.json", "#ingredients-overall");
-genBarChart("charts/ingredient_pairings.json", "#ingredient-pairings");
-genBarChart("charts/base_ingredient_pairings.json", "#base-ingredient-pairings");
+genBarChart("charts/ingredients_overall.json", "#toppings-overall");
+genBarChart("charts/ingredient_pairings.json", "#topping-pairings");
+genBarChart("charts/base_ingredient_pairings.json", "#base-topping-pairings");
