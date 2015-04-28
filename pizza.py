@@ -96,6 +96,7 @@ class Pizza(object):
         self.description = attr("caption").get("text")
         self.tokens = word_tokenize(self.description) 
         self.tokens = [t.replace("-", "").lower().encode('utf-8') for t in self.tokens] 
+        self.like_count = attr("likes").get("count")
 
         self._parse_base()
         self._parse_ingredients()

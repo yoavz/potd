@@ -39,3 +39,6 @@ genBarChart("charts/base_by_weekday.json", "#base-by-weekday");
 genBarChart("charts/ingredients_overall.json", "#toppings-overall");
 genBarChart("charts/ingredient_pairings.json", "#topping-pairings");
 genBarChart("charts/base_ingredient_pairings.json", "#base-topping-pairings");
+
+genBarChart("charts/ingredients_likes.json", "#ingredients-likes");
+genBarChart("charts/likes_by_weekday.json", "#likes-by-weekday");

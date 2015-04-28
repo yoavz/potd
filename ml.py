@@ -7,6 +7,7 @@ import sklearn
 from sklearn import svm
 from sklearn import linear_model
 from sklearn import tree 
+from sklearn import ensemble
 from pprint import pprint
 
 import constants
@@ -18,7 +19,7 @@ def load():
 def base_class(pizza):
     return constants.BASES.index(pizza.base)
 
-def train_bases(p, prev=3):
+def train_bases(p, prev=7):
     # make a copy
     pizzas = list(p)
 
@@ -36,10 +37,13 @@ def train_bases(p, prev=3):
         for j in range(1,1+prev):
             if i-j>=0:
                 prev_bases.append(float(base_class(pizzas[i-j])))
+                x += pizzas[i-j].ingred_feature_vector()
             else:
                 prev_bases.append(0.0)
+                x += [0.0]
         x += prev_bases
 
+        print x
         X.append(x)
 
     # numpy and normalize
@@ -61,7 +65,7 @@ def train_bases(p, prev=3):
     train_Y = Y[:split]
     test_X = X[split:]
     test_Y = Y[split:]
-    model = linear_model.LogisticRegression()
+    model = ensemble.RandomForestClassifier(n_estimators=1000, verbose=True) 
     model.fit(train_X, train_Y)
 
     print "Prev bases: " + str(prev)
@@ -85,5 +89,6 @@ if __name__ == '__main__':
             else: 
                 problems[problem] = 0 
     
-    for i in range(10):
-        train_bases(pizzas, prev=i)
+    # for i in range(10):
+    #     train_bases(pizzas, prev=i)
+    train_bases(pizzas, prev=100)

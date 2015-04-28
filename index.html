@@ -8,6 +8,7 @@
 
     <title>Pizza of the Day</title>
 
+    <link href='http://fonts.googleapis.com/css?family=Maven+Pro:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
   </head>
@@ -22,7 +23,7 @@
 
       <div class="section">
         <h2>Introduction</h2>
-        <p>Everybody loves pizza, myself included. And recently, a few friends and I have been eating more pizza than we ever have in our lives. Let me explain: 800 Degrees Pizza is Westwood's beloved local "build-your-own" pizza spot. It is regarded by UCLA students as "our best pizza", which in a school with <a href="http://dailybruin.com/2015/01/28/pieology-to-take-a-slice-of-westwoods-competitive-pizza-market/">extremely stiff pizza competition</a>, is not an opinion to be taken lightly. Of course, the superior quality of ingredients will cost you more than your average Domino's pizza, anywhere from $10-15 for a meal.</p>
+        <p>Everybody loves pizza, myself included. And recently, a few friends and I have been eating more pizza than we ever have in our lives. Let me explain: <a href="http://www.800degreespizza.com/">800 Degrees Pizza</a> is Westwood's beloved local "build-your-own" pizza spot. It is regarded by UCLA students as "our best pizza", which in a school with <a href="http://dailybruin.com/2015/01/28/pieology-to-take-a-slice-of-westwoods-competitive-pizza-market/">extremely stiff pizza competition</a>, is not an opinion to be taken lightly. Of course, the superior quality of ingredients will cost you more than your average Domino's pizza, anywhere from $10-15 for a meal.</p>
         <p>Now here's where it gets interesting: Since July 2014, 800 Degrees has been offering a deal they call the <i>Instagram Special</i>. Every day, their instagram account posts a picture of a pizza which will be <strong>50% off</strong> for the day, which usually ends up being somewhere in the range of $4-5. It didn't take me long to become a habitual checker of instagram every day between the hours of 10 AM to 12 PM, when the <i>POTD</i> was usually posted by the 800 Degrees instagram account. Some days you'd get your average brocollini and mushrooms on margherita. Other days, you'd hit the jackpot with bacon, rosemary ham,  or my personal favorite, the legendary <a href="http://en.wikipedia.org/wiki/Peppadew">peppadew pepper</a> on Bianca.</p>
         <p>I quickly became interested in how the POTD was picked every day. Who decided on the daily ingredients and what was their criteria for choosing them? Was a pattern behind the ingredients? Most importantly, was there some way to predict the pizza of the day before it was posted? This is the ultimate goal of this project.</p>
       </div>
@@ -49,7 +50,7 @@
           <div class="legend">
             <div class="legend-scale"></div>
           </div>
-          <p>Again, mostly inconclusive.</p>
+          <p>Most months have a similar base frequency distribution to the overall base frequency distribution. There's nothing too interesting we can use for prediction here.</p>
         </div>
 
         <div id="base-by-weekday">
@@ -58,7 +59,7 @@
           <div class="legend">
             <div class="legend-scale"></div>
           </div>
-          <p>Tuesday has featured a Bianca base 50% of the time, as opposed to an overall ~26% frequency for Bianca. This is an interesting find, but probably not significant due to the relatively small number of data points we're dealing with.</p>
+          <p>Breaking down the base frequency by weekdays is a little more interesting. Tuesday has featured a Bianca base 50% of the time, as opposed to an overall ~26% frequency for Bianca. Still, this is probably not significant due to the relatively small number of data points we're dealing with.</p>
         </div>
       </div>
 
@@ -68,56 +69,39 @@
         <div id="toppings-overall">
           <h3>Topping Frequency</h3>
           <canvas class="graph"></canvas>
-          <p>The above graph rules out a completely random algorithm to select the <i>POTD</i>, as clearly some ingredients are favored over others. My guess would be that these toppings are less popular among regular customers and have a surplus.</p>
-        </div>
-
-        <div id="toppings-by-day">
-          <h3>Toppings By Day</h3>
-          <p>
-            {'Friday': [('broccolini', 6), ('mushroom', 5), ('roasted garlic', 5)],
-             'Monday': [('broccolini', 7), ('rosemary ham', 6), ('chicken', 5)],
-             'Saturday': [('pesto', 6), ('ricotta', 5), ('bacon', 4)],
-             'Sunday': [('artichoke', 5), ('sundried tomato', 5), ('chicken', 4)],
-             'Thursday': [('soppressata', 9), ('salami', 6), ('caramelized onion', 6)],
-             'Tuesday': [('sundried tomato', 6),
-                         ('mushroom', 5),
-                         ('caramelized onion', 5)],
-             'Wednesday': [('chicken', 7), ('tomato', 7), ('mushroom', 5)]}
-          </p>
-          <p>
-            Nothing too interesting here, except for the frequency of soppressata on Thursdays! Over 30% of soppressata pizza's have fallen on thursday so far
-          </p>
-        </div>
-
-        <div id="toppings-by-month">
-          <h3>Toppings by Month</h3>
-          <p>
-            {'August': [('chicken', 4), ('spinach', 4), ('egg', 4)],
-             'December': [('arugula', 4), ('sundried tomato', 4), ('spinach', 4)],
-             'February': [('chicken', 5), ('bacon', 4), ('roasted garlic', 4)],
-             'January': [('ricotta', 6), ('caramelized onion', 4), ('bacon', 3)],
-             'July': [('spinach', 2), ('salami', 2), ('soppressata', 2)],
-             'March': [('broccolini', 5), ('chicken', 4), ('sundried tomato', 4)],
-             'November': [('mushroom', 4), ('broccolini', 4), ('caramelized onion', 4)],
-             'October': [('chicken', 5), ('peppadew', 5), ('broccolini', 4)],
-             'September': [('chicken', 5), ('salami', 5), ('tomato', 5)]}
-          </p>
-          <p>
-            Nothing too interesting here
-          </p>
+          <p>The above graph rules out a completely random algorithm to select the <i>POTD</i>, as clearly some ingredients are favored over others. My guess would be that these toppings are less popular among regular customers and 800 Degree's locations usually have a surplus.</p>
+          <p>Another interesting metric is to look at combination frequencies. The following two graphs take a look at topping-topping and topping-base frequencies, respectively.</p>
         </div>
 
         <div id="topping-pairings">
-          <h3>Topping-Base Pairings</h3>
+          <h3>Topping-Topping Pair Frequency</h3>
           <canvas class="graph"></canvas>
         </div>
 
         <div id="base-topping-pairings">
-          <h3>Topping-Topping Pairings</h3>
+          <h3>Topping-Base Pair Frequency</h3>
           <canvas class="graph"></canvas>
         </div>
 
+    </div>
 
+    <div class="section">
+      <h2>Prediction</h2>
+      <p>After experimenting with a few machine learning algorithms with scikit-learn, I wasn't able to find any prediction models of significant accuracy. I welcome any data wizards to try out experimenting with the <a href="data/pizzas.json">dataset</a>, but it may that we just have too few data points. Still, we can at least derive some insight from the graphs above. And we still have a few more data points to consider...</p>
+    </div>
+
+    <div class="section">
+      <h2>Likes</h2>
+      <p>Instagram</p> 
+      <div id="ingredients-likes">
+        <h3>Average Likes per Ingredient</h3>
+        <canvas class="graph"></canvas>
+      </div>
+
+      <div id="likes-by-weekday">
+        <h3>Average Likes by Weekday</h3>
+        <canvas class="graph"></canvas>
+      </div>
     </div>
 
 

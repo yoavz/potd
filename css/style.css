@@ -1,9 +1,17 @@
 body {
+  font-family: 'Maven Pro', sans-serif;
 }
 
 .container {
   max-width: 600px;
   margin: 0 auto;
+}
+
+h2:after {
+  margin-top: 5px;
+  content: ' ';
+  display: block;
+  border: 1px solid black;
 }
 
 /* graph titles */

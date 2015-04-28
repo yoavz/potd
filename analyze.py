@@ -47,6 +47,20 @@ def ingredient_counts(pizzas):
                 ingreds[ingred] = 1 
     return ingreds
 
+def ingredients_avg_likes(pizzas):
+    ingreds = dict()
+    for p in pizzas:
+        for ingred in p.ingredient_list():
+            if ingred in ingreds:
+                ingreds[ingred].append(p.like_count)
+            else:
+                ingreds[ingred] = [p.like_count]
+
+    # average all like counts
+    ingreds = { i: int(float(sum(v))/float(len(v))) for i, v in ingreds.iteritems() }
+    return ingreds
+    
+
 def seperate_by_strftime(pizzas, _format):
     '''
     Input: a list of pizza objects
@@ -116,6 +130,25 @@ def base_counts_by_day(pizzas):
 def base_counts_by_month(pizzas):
     return base_counts_by_format(pizzas, "%B")
 
+def like_counts_by_format(pizzas, _format):
+    '''
+    Input: list of pizza objects and a strftime format
+    Output: average like counts grouped by the _format
+    '''
+
+    seperated_pizzas = seperate_by_strftime(pizzas, _format)
+
+    counts = { d: int(float(sum([p.like_count for p in v]))/float(len(v)))
+               for d, v in seperated_pizzas.iteritems() }
+
+    return counts
+
+def like_counts_by_day(pizzas):
+    return like_counts_by_format(pizzas, "%A")
+
+def like_counts_by_month(pizzas):
+    return like_counts_by_format(pizzas, "%B")
+
 def combos_pizzas(pizzas, N=2):
     '''
     Input: list of pizza object and an integer N
@@ -170,6 +203,7 @@ def base_pairings_pizzas(pizzas, N=1):
 def base_pairings(pizzas, N=1):
     return { c: len(v) for c, v in base_pairings_pizzas(pizzas, N).iteritems() }
 
+
 def chartjs_pie_graph(counts):
     colors = list(constants.COLORS) * len(counts)
 
@@ -183,11 +217,14 @@ def chartjs_pie_graph(counts):
         })
     return ret 
 
-def chartjs_bar_graph(counts):
+def chartjs_bar_graph(counts, sorted_labels=None):
     colors = list(constants.COLORS) * len(counts)
 
-    counts_tups = [(c, v) for c, v in counts.iteritems()]
-    counts_tups = sorted(counts_tups, key=lambda x: x[1], reverse=True)
+    if sorted_labels:
+        counts_tups = [(l, counts[l]) for l in sorted_labels]
+    else:
+        counts_tups = [(c, v) for c, v in counts.iteritems()]
+        counts_tups = sorted(counts_tups, key=lambda x: x[1], reverse=True)
 
     return {
         "labels": [l[0] for l in counts_tups],
@@ -282,3 +319,7 @@ if __name__ == '__main__':
     pairings_tups = sorted(pairings.items(), key=lambda x: x[1], reverse=True)
     pairings = dict(pairings_tups[:20])
     gen_json('base_ingredient_pairings', chartjs_bar_graph(pairings))
+
+    # likes 
+    gen_json('ingredients_likes', chartjs_bar_graph(ingredients_avg_likes(pizzas)))
+    gen_json('likes_by_weekday', chartjs_bar_graph(like_counts_by_day(pizzas), sorted_labels=days))
