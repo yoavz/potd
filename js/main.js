@@ -19,6 +19,14 @@ function genChart(dataFile, domSelector, type) {
       case POTD.ChartJSType.BAR: 
         var chart = new Chart(ctx).Bar(json);
         break;
+      case "scatter":
+        var chart = new Chart(ctx).Scatter(json, {
+          datasetStroke: false, // no lines
+          pointDotStrokeWidth: 0,
+          // pointDotRadius: 2,
+          // pointHitRadius: 2
+        }); 
+        break;
       default:
         console.log("Invalid chart js type");
     }
@@ -31,6 +39,7 @@ function genChart(dataFile, domSelector, type) {
 
 genPieChart = function (f, d) { genChart(f, d, POTD.ChartJSType.PIE); }
 genBarChart = function (f, d) { genChart(f, d, POTD.ChartJSType.BAR); }
+genScatterChart = function (f, d) { genChart(f, d, "scatter"); }
 
 genPieChart("charts/base_overall.json", "#base-overall");
 genBarChart("charts/base_by_month.json", "#base-by-month");
@@ -40,5 +49,8 @@ genBarChart("charts/ingredients_overall.json", "#toppings-overall");
 genBarChart("charts/ingredient_pairings.json", "#topping-pairings");
 genBarChart("charts/base_ingredient_pairings.json", "#base-topping-pairings");
 
+genBarChart("charts/base_likes.json", "#base-likes");
 genBarChart("charts/ingredients_likes.json", "#ingredients-likes");
 genBarChart("charts/likes_by_weekday.json", "#likes-by-weekday");
+
+genScatterChart("charts/likes_by_time.json", "#likes-by-time");

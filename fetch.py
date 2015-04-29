@@ -28,7 +28,7 @@ def organize(payload, log=True):
 
 
     def prune(o):
-        wanted = [ "filter", "tags", "id", "location", "created_time", "link", "caption", "likes", "images" ]
+        wanted = [ "filter", "tags", "id", "location", "created_time", "link", "caption", "likes", "images", "comments" ]
         return { k: o.get(k) for k in wanted }
 
     images = [ prune(o) for o in data if o.get("type") == "image" ]

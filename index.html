@@ -19,13 +19,12 @@
 
       <h1>Pizza of the Day</h1>
 
-      <p><i>Disclaimer: I am not affiliated with 800 Degree's Pizza in any way</i></p>
-
       <div class="section">
         <h2>Introduction</h2>
         <p>Everybody loves pizza, myself included. And recently, a few friends and I have been eating more pizza than we ever have in our lives. Let me explain: <a href="http://www.800degreespizza.com/">800 Degrees Pizza</a> is Westwood's beloved local "build-your-own" pizza spot. It is regarded by UCLA students as "our best pizza", which in a school with <a href="http://dailybruin.com/2015/01/28/pieology-to-take-a-slice-of-westwoods-competitive-pizza-market/">extremely stiff pizza competition</a>, is not an opinion to be taken lightly. Of course, the superior quality of ingredients will cost you more than your average Domino's pizza, anywhere from $10-15 for a meal.</p>
-        <p>Now here's where it gets interesting: Since July 2014, 800 Degrees has been offering a deal they call the <i>Instagram Special</i>. Every day, their instagram account posts a picture of a pizza which will be <strong>50% off</strong> for the day, which usually ends up being somewhere in the range of $4-5. It didn't take me long to become a habitual checker of instagram every day between the hours of 10 AM to 12 PM, when the <i>POTD</i> was usually posted by the 800 Degrees instagram account. Some days you'd get your average brocollini and mushrooms on margherita. Other days, you'd hit the jackpot with bacon, rosemary ham,  or my personal favorite, the legendary <a href="http://en.wikipedia.org/wiki/Peppadew">peppadew pepper</a> on Bianca.</p>
+        <p>Now here's where it gets interesting: Since July 2014, 800 Degrees has been offering a deal they call the <i>Instagram Special</i>. Every day, their <a href="https://instagram.com/800degreespizza/">instagram account</a> posts a picture of a pizza which will be <strong>50% off</strong> for the day, which usually ends up being somewhere in the range of $4-5. It didn't take me long to become a habitual checker of instagram every day between the hours of 10 AM to 12 PM, when the <i>POTD</i> was usually posted by the 800 Degrees instagram account. Some days you'd get your average brocollini and mushrooms on margherita. Other days, you'd hit the jackpot with bacon, rosemary ham,  or my personal favorite, the legendary <a href="http://en.wikipedia.org/wiki/Peppadew">peppadew pepper</a> on Bianca.</p>
         <p>I quickly became interested in how the POTD was picked every day. Who decided on the daily ingredients and what was their criteria for choosing them? Was a pattern behind the ingredients? Most importantly, was there some way to predict the pizza of the day before it was posted? This is the ultimate goal of this project.</p>
+        <p><i>Disclaimer: I am not affiliated with 800 Degree's Pizza</i></p>
       </div>
       
       <div class="section">
@@ -87,22 +86,51 @@
 
     <div class="section">
       <h2>Prediction</h2>
-      <p>After experimenting with a few machine learning algorithms with scikit-learn, I wasn't able to find any prediction models of significant accuracy. I welcome any data wizards to try out experimenting with the <a href="data/pizzas.json">dataset</a>, but it may that we just have too few data points. Still, we can at least derive some insight from the graphs above. And we still have a few more data points to consider...</p>
+      <p>Theoretically, one could take all this data and plug it into a classification algorithm to try and predict the pizza given the "context" of the day. The "context" for each day could consist of features like ingredients/base of the previous several POTD's, day of the week, and month.</p>
+      <p>But after experimenting with a few different machine learning algorithms, I wasn't able to find any prediction models of significant accuracy myself. With this deal running less than one year, I believe there's just too few data points for any success. I welcome any experts to try out experimenting with the <a href="data/pizzas.json">dataset</a>. If you find any success, <a href="http://yoavz.com">contact me</a>, I'd love to know!</p>
     </div>
+
 
     <div class="section">
       <h2>Likes</h2>
-      <p>Instagram</p> 
-      <div id="ingredients-likes">
-        <h3>Average Likes per Ingredient</h3>
+      <p>I wasn't able to come up with a prediction model, but there's a few more metrics were interesting to take a look at. Since all of the data is coming directly from instagram, we easily have access the likes/comments on each <i>POTD</i> instagram post. It is important to note that likes and comments may depend on many factors; for example, the instagram account of 800 degree's is continually growing in popularity, which leads to more recent pizza's achieving a higher like/comment count on average. Still, likes and comments may be a good metric for estimating general satisfaction with of the <i>POTD</i>.
+      <div id="base-likes">
+        <h3>Average Likes/Comments by Base</h3>
         <canvas class="graph"></canvas>
+        <div class="legend">
+          <div class="legend-scale"></div>
+        </div>
+        <p>The public has spoken: Verde is the "most-liked" base. I consider myself a Bianca man, but hey, I can enjoy a good Verde.</p>
+      </div>
+
+      <div id="ingredients-likes">
+        <h3>Average Likes/Comments by Ingredient</h3>
+        <canvas class="graph"></canvas>
+        <div class="legend">
+          <div class="legend-scale"></div>
+        </div>
+        <p>As with bases, average likes and comments for ingredients seem relatively uniform across the board.</p>
       </div>
 
       <div id="likes-by-weekday">
-        <h3>Average Likes by Weekday</h3>
+        <h3>Average Likes/Comments by Weekday</h3>
         <canvas class="graph"></canvas>
+        <div class="legend">
+          <div class="legend-scale"></div>
+        </div>
+        <p>It's interesting to look at how the day of the week affects the amount of likes and comments 800 Degree's gets on each post. The above graph implies that people are slightly more active earlier in the week, but is that because people use Instagram more during the week or because people actually are more interested in 800 Degrees pizza's during the week? Perhaps a little bit of both.
       </div>
     </div>
+
+    <div id="likes-by-time">
+      <h3>Time Posted (Minutes since 9 AM) against Likes/Comments</h3>
+      <canvas class="graph"></canvas>
+      <div class="legend">
+        <div class="legend-scale"></div>
+      </div>
+      <p>The final trend I was interested in was the time the post was made to the instagram amount. The above graph plots minutes since 9 AM on the X axis against Like/Comment count on the Y axis. 
+    </div>
+
 
 
     <!-- Bootstrap core JavaScript
@@ -110,6 +138,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.11.2.min.js"></script>
     <script src="js/Chart.min.js"></script>
+    <script src="js/Chart.Scatter.js"></script>
     <script src="js/main.js"></script>
     
   </body>

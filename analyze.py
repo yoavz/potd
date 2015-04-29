@@ -32,6 +32,30 @@ def base_counts(pizzas):
             bases[p.base] = 0
     return bases
 
+def base_avg_attr(pizzas, attr):
+    '''
+    Input: a list of pizza objects
+    Output: a dictionary of avg attr for base counts 
+    '''
+    bases = dict()
+    for p in pizzas:
+        v = getattr(p, attr)
+        if p.base in bases:
+            bases[p.base].append(v)
+        else:
+            bases[p.base] = [v]
+
+    bases = { i: round(float(sum(v))/float(len(v)), 2) for i, v in bases.iteritems() }
+
+    return bases
+
+def base_avg_likes(pizzas):
+    return base_avg_attr(pizzas, 'like_count')
+
+def base_avg_comments(pizzas):
+    return base_avg_attr(pizzas, 'comment_count')
+
+
 def ingredient_counts(pizzas):
     '''
     Input: a list of pizza objects
@@ -57,7 +81,20 @@ def ingredients_avg_likes(pizzas):
                 ingreds[ingred] = [p.like_count]
 
     # average all like counts
-    ingreds = { i: int(float(sum(v))/float(len(v))) for i, v in ingreds.iteritems() }
+    ingreds = { i: round(float(sum(v))/float(len(v)), 2) for i, v in ingreds.iteritems() }
+    return ingreds
+
+def ingredients_avg_comments(pizzas):
+    ingreds = dict()
+    for p in pizzas:
+        for ingred in p.ingredient_list():
+            if ingred in ingreds:
+                ingreds[ingred].append(p.comment_count)
+            else:
+                ingreds[ingred] = [p.comment_count]
+
+    # average all comment counts
+    ingreds = { i: round(float(sum(v))/float(len(v)), 2) for i, v in ingreds.iteritems() }
     return ingreds
     
 
@@ -138,7 +175,7 @@ def like_counts_by_format(pizzas, _format):
 
     seperated_pizzas = seperate_by_strftime(pizzas, _format)
 
-    counts = { d: int(float(sum([p.like_count for p in v]))/float(len(v)))
+    counts = { d: round(float(sum([p.like_count for p in v]))/float(len(v)), 2)
                for d, v in seperated_pizzas.iteritems() }
 
     return counts
@@ -148,6 +185,25 @@ def like_counts_by_day(pizzas):
 
 def like_counts_by_month(pizzas):
     return like_counts_by_format(pizzas, "%B")
+
+def comment_counts_by_format(pizzas, _format):
+    '''
+    Input: list of pizza objects and a strftime format
+    Output: average comment counts grouped by the _format
+    '''
+
+    seperated_pizzas = seperate_by_strftime(pizzas, _format)
+
+    counts = { d: round(float(sum([p.comment_count for p in v]))/float(len(v)), 2)
+               for d, v in seperated_pizzas.iteritems() }
+
+    return counts
+
+def comment_counts_by_day(pizzas):
+    return comment_counts_by_format(pizzas, "%A")
+
+def comment_counts_by_month(pizzas):
+    return comment_counts_by_format(pizzas, "%B")
 
 def combos_pizzas(pizzas, N=2):
     '''
@@ -260,6 +316,19 @@ def chartjs_multibar_graph(multi_counts, sorted_labels=None):
         } for key in keys]
     }
 
+def chartjs_scatter_graph(datasets):
+
+    ret = []
+    colors = list(constants.COLORS) * len(datasets)
+
+    for d, v in datasets.iteritems():
+        ret.append({
+            "label": d,
+            "pointColor": colors.pop(),
+            "data": [ { "x": t[0], "y": t[1] } for t in v ]
+        })
+
+    return ret
 
 ########
 # MAIN #
@@ -320,6 +389,36 @@ if __name__ == '__main__':
     pairings = dict(pairings_tups[:20])
     gen_json('base_ingredient_pairings', chartjs_bar_graph(pairings))
 
-    # likes 
-    gen_json('ingredients_likes', chartjs_bar_graph(ingredients_avg_likes(pizzas)))
-    gen_json('likes_by_weekday', chartjs_bar_graph(like_counts_by_day(pizzas), sorted_labels=days))
+    # likes/comments by ingredient
+    i_likes = ingredients_avg_likes(pizzas)
+    i_comments = ingredients_avg_comments(pizzas)
+    i_labels = [i[0] for i in sorted(i_likes.items(), key=lambda x: x[1], reverse=True)]
+    lc_by_ingred = { i: [('likes', i_likes[i]), ('comments', i_comments[i])]
+                     for i in i_labels }
+    gen_json('ingredients_likes', chartjs_multibar_graph(lc_by_ingred, sorted_labels=i_labels))
+
+    # likes/comments by base
+    b_likes = base_avg_likes(pizzas)
+    b_comments = base_avg_comments(pizzas)
+    b_labels = [i[0] for i in sorted(b_likes.items(), key=lambda x: x[1], reverse=True)]
+    lc_by_base = { b: [('likes', b_likes[b]), ('comments', b_comments[b])]
+                     for b in b_labels }
+    gen_json('base_likes', chartjs_multibar_graph(lc_by_base, sorted_labels=b_labels))
+
+    # likes/comments by weekday
+    l_by_day = like_counts_by_day(pizzas)
+    c_by_day = comment_counts_by_day(pizzas)
+    lc_by_day = { d: [('likes', l_by_day[d]), ('comments', c_by_day[d])] for d in days }
+    gen_json('likes_by_weekday', chartjs_multibar_graph(lc_by_day, sorted_labels=days))
+
+    # likes by time posted
+    def minutes_since_nine(timestamp):
+        nine = datetime.datetime.combine(timestamp.date(), datetime.time(9, 0, 0))
+        return round((timestamp - nine).total_seconds() / float(60), 2)
+
+    l_by_time = [(minutes_since_nine(p.timestamp), p.like_count) for p in pizzas
+                 if minutes_since_nine(p.timestamp) < 200]
+    c_by_time = [(minutes_since_nine(p.timestamp), p.comment_count) for p in pizzas
+                 if minutes_since_nine(p.timestamp) < 200]
+    scatter = chartjs_scatter_graph({"likes": l_by_time, "comments": c_by_time})
+    gen_json('likes_by_time', scatter)

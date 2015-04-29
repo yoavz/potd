@@ -1,1 +1,1 @@
-{"labels": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "datasets": [{"data": [179, 196, 200, 188, 187, 165, 171], "fillColor": "#D1A674", "label": "idunno"}]}
+{"labels": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "datasets": [{"data": [179.64, 196.32, 202.37, 188.31, 187.95, 165.74, 171.13], "fillColor": "#D1A674", "label": "likes"}, {"data": [18.59, 33.02, 38.71, 35.74, 33.43, 27.71, 16.75], "fillColor": "#B44418", "label": "comments"}]}
