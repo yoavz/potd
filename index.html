@@ -21,9 +21,9 @@
 
       <div class="section">
         <h2>Introduction</h2>
-        <p>Everybody loves pizza, myself included. And recently, a few friends and I have been eating more pizza than we ever have in our lives. Let me explain: <a href="http://www.800degreespizza.com/">800 Degrees Pizza</a> is Westwood's beloved local "build-your-own" pizza spot. It is regarded by UCLA students as "our best pizza", which in a school with <a href="http://dailybruin.com/2015/01/28/pieology-to-take-a-slice-of-westwoods-competitive-pizza-market/">extremely stiff pizza competition</a>, is not an opinion to be taken lightly. Of course, the superior quality of ingredients will cost you more than your average Domino's pizza, anywhere from $10-15 for a meal.</p>
+        <p>Everybody loves pizza. Recently, a few friends and I have been eating more pizza than we ever have in our lives. Let me explain: <a href="http://www.800degreespizza.com/">800 Degrees Pizza</a> is Westwood's beloved local "build-your-own" pizza spot. It is regarded by UCLA students as "our best pizza", which in a school with <a href="http://dailybruin.com/2015/01/28/pieology-to-take-a-slice-of-westwoods-competitive-pizza-market/">extremely stiff pizza competition</a>, is not an opinion to be taken lightly. Of course, the superior quality of ingredients will cost you more than your average Domino's pizza, anywhere from $10-15 for a meal.</p>
         <p>Now here's where it gets interesting: Since July 2014, 800 Degrees has been offering a deal they call the <i>Instagram Special</i>. Every day, their <a href="https://instagram.com/800degreespizza/">instagram account</a> posts a picture of a pizza which will be <strong>50% off</strong> for the day, which usually ends up being somewhere in the range of $4-5. It didn't take me long to become a habitual checker of instagram every day between the hours of 10 AM to 12 PM, when the <i>POTD</i> was usually posted by the 800 Degrees instagram account. Some days you'd get your average brocollini and mushrooms on margherita. Other days, you'd hit the jackpot with bacon, rosemary ham,  or my personal favorite, the legendary <a href="http://en.wikipedia.org/wiki/Peppadew">peppadew pepper</a> on Bianca.</p>
-        <p>I quickly became interested in how the POTD was picked every day. Who decided on the daily ingredients and what was their criteria for choosing them? Was a pattern behind the ingredients? Most importantly, was there some way to predict the pizza of the day before it was posted? This is the ultimate goal of this project.</p>
+        <p>I quickly became interested in how the POTD was picked every day. Who decided on the daily ingredients and what was their criteria for choosing them? Was a pattern behind the ingredients? Most importantly, was there some way to predict the pizza of the day before it was posted?</p>
         <p><i>Disclaimer: I am not affiliated with 800 Degree's Pizza</i></p>
       </div>
       
@@ -40,7 +40,7 @@
           <div class="legend">
             <div class="legend-scale"></div>
           </div>
-          <p>OK, so we already see a trend that suggests a nonrandom distribution: Marinara seems to be far less chosen for the <i>POTD</i> then the other bases. Still, this is not too surprising. Marinara is the least favorite base amongst most 800 Degrees fans I know due to it's alarming lack of cheese.</p>
+          <p>Not too surprising. Marinara is the least favorite base amongst most 800 Degrees fans I know due to it's alarming lack of cheese.</p>
         </div>
 
         <div id="base-by-month">
@@ -49,7 +49,7 @@
           <div class="legend">
             <div class="legend-scale"></div>
           </div>
-          <p>Most months have a similar base frequency distribution to the overall base frequency distribution. There's nothing too interesting we can use for prediction here.</p>
+          <p>Most months have a similar base frequency distribution to the overall base frequency distribution. Note that since the instagram special deal has been around for less than a year, some months are missing and July has scarce data.</p>
         </div>
 
         <div id="base-by-weekday">
@@ -58,23 +58,24 @@
           <div class="legend">
             <div class="legend-scale"></div>
           </div>
-          <p>Breaking down the base frequency by weekdays is a little more interesting. Tuesday has featured a Bianca base 50% of the time, as opposed to an overall ~26% frequency for Bianca. Still, this is probably not significant due to the relatively small number of data points we're dealing with.</p>
+          <p>Breaking down the base frequency by weekdays is a little more interesting. Tuesday has featured a Bianca base 50% of the time, as opposed to an overall ~26% frequency for Bianca.</p>
         </div>
       </div>
 
       <div class="section">
         <h2>Toppings</h2>
-        <p>Toppings are vital to all pizza's. Historically, a <i>POTD</i> can feature anywhere from one to four toppings. On the 800 Degree menu they're grouped into three categories: Proteins, Cheeses, and Vegetables. For now, let's lump all of those together.</p>
+        <p>Toppings make the pizza. Historically, a <i>POTD</i> can feature anywhere from one to four toppings. On the 800 Degree menu they're grouped into three categories: Proteins, Cheeses, and Vegetables. For now, let's lump all of those together.</p>
         <div id="toppings-overall">
           <h3>Topping Frequency</h3>
           <canvas class="graph"></canvas>
           <p>The above graph rules out a completely random algorithm to select the <i>POTD</i>, as clearly some ingredients are favored over others. My guess would be that these toppings are less popular among regular customers and 800 Degree's locations usually have a surplus.</p>
-          <p>Another interesting metric is to look at combination frequencies. The following two graphs take a look at topping-topping and topping-base frequencies, respectively.</p>
+          <p>Another interesting metric is to look at how often two ingredients are paired together or how often an ingredient is paired with a specific base. The following two graphs take a look at topping-topping and topping-base frequencies, respectively.</p>
         </div>
 
         <div id="topping-pairings">
           <h3>Topping-Topping Pair Frequency</h3>
           <canvas class="graph"></canvas>
+          <p>Mmmmm, I dream about chicken, carmelized onion, and sundried tomatoes on Bianca.</p>
         </div>
 
         <div id="base-topping-pairings">
@@ -87,15 +88,15 @@
     <div class="section">
       <h2>Prediction</h2>
       <p>Theoretically, one could take all this data and plug it into a classification algorithm to try and predict the pizza given the "context" of the day. The "context" for each day could consist of features like ingredients/base of the previous several POTD's, day of the week, and month.</p>
-      <p>But after experimenting with a few different machine learning algorithms, I wasn't able to find any prediction models of significant accuracy myself. With this deal running less than one year, I believe there's just too few data points for any success. I welcome any experts to try out experimenting with the <a href="data/pizzas.json">dataset</a>. If you find any success, <a href="http://yoavz.com">contact me</a>, I'd love to know!</p>
+      <p>But after experimenting with a few different machine learning algorithms, I wasn't able to find any prediction models of significant accuracy myself. My gut tells me there's not enough data points and selection is too random, but I welcome any experts to experiment with the <a href="data/pizzas.json">dataset</a>! If you find any success, make sure to <a href="http://yoavz.com">contact me</a>, I'd love to know.</p>
     </div>
 
 
     <div class="section">
-      <h2>Likes</h2>
-      <p>I wasn't able to come up with a prediction model, but there's a few more metrics were interesting to take a look at. Since all of the data is coming directly from instagram, we easily have access the likes/comments on each <i>POTD</i> instagram post. It is important to note that likes and comments may depend on many factors; for example, the instagram account of 800 degree's is continually growing in popularity, which leads to more recent pizza's achieving a higher like/comment count on average. Still, likes and comments may be a good metric for estimating general satisfaction with of the <i>POTD</i>.
+      <h2>Social Data</h2>
+      <p>I wasn't able to come up with a prediction model, but there's a few more visualizations that could be interesting to take a look at. Since all of the data is coming directly from instagram, we easily have access the likes/comments on each <i>POTD</i> instagram post. It is important to note that likes and comments may depend on many factors; for example, the instagram account of 800 degree's is continually growing in popularity, which leads to more recent pizza's achieving a higher like/comment count on average. Still, likes and comments may be a good metric for estimating general satisfaction with of the <i>POTD</i>.
       <div id="base-likes">
-        <h3>Average Likes/Comments by Base</h3>
+        <h3>Average Like/Comment Count by Base</h3>
         <canvas class="graph"></canvas>
         <div class="legend">
           <div class="legend-scale"></div>
@@ -104,12 +105,11 @@
       </div>
 
       <div id="ingredients-likes">
-        <h3>Average Likes/Comments by Ingredient</h3>
+        <h3>Average Like/Comment Count by Ingredient</h3>
         <canvas class="graph"></canvas>
         <div class="legend">
           <div class="legend-scale"></div>
         </div>
-        <p>As with bases, average likes and comments for ingredients seem relatively uniform across the board.</p>
       </div>
 
       <div id="likes-by-weekday">
@@ -128,10 +128,10 @@
       <div class="legend">
         <div class="legend-scale"></div>
       </div>
-      <p>The final trend I was interested in was the time the post was made to the instagram amount. The above graph plots minutes since 9 AM on the X axis against Like/Comment count on the Y axis. 
+      <p>The final trend I was interested in was the time the post was made to the instagram amount. The above graph plots minutes since 9 AM on the X axis against Like/Comment count on the Y axis. 10 AM (60 on the X axis) seems to be go time for the 800 Degree's PR team, but sometimes they put it off until after noon. Those are the worst days.
     </div>
 
-
+    <p><a href="http://github.com/yoavz/potd">Source</a></p>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
